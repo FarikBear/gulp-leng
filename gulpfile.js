@@ -28,7 +28,7 @@ gulp.task('js', function () {
 });
 
 gulp.task('html', function(){
-    return gulp.src('app/src/*.html')
+    return gulp.src('app/src/**/*.html')
     .pipe(browserSync.reload({stream: true}))
     .pipe(gulp.dest('app/dist/'))
     .pipe(browserSync.reload({stream: true}));
