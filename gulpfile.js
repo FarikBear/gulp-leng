@@ -9,11 +9,11 @@ const autoprefixer = require('gulp-autoprefixer')
 gulp.task('sass', () => {
     return gulp.src('app/src/sass/*.sass')
     .pipe(sass({outputStyle: 'compressed'}))
-    .pipe(rename({suffix: '.min'}))
     .pipe(autoprefixer({
         cascade: false
     }))
     .pipe(concat('style.css'))
+    .pipe(rename({suffix: '.min'}))
     .pipe(gulp.dest('app/dist/css'))
     .pipe(browserSync.reload({stream: true}))
 });
@@ -23,24 +23,29 @@ gulp.task('js', function () {
     .pipe(uglify())
     .pipe(concat('script.js'))
     .pipe(rename({suffix: '.min'}))
-    .pipe(gulp.dest('./dist/js'));
+    .pipe(gulp.dest('app/dist/js'))
+    .pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task('html', function(){
     return gulp.src('app/src/*.html')
     .pipe(browserSync.reload({stream: true}))
+    .pipe(concat('main.html'))
+    .pipe(gulp.dest('app/dist/'))
+    .pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task('browser-sync', function() {
     browserSync.init({
-        server: './',
+        server: 'app/',
         port: 8080,
-        open: false
+        open: false,
     });
 });
 
 gulp.task('watch', () => {
-    gulp.watch('app/src/**/*.sass', gulp.parallel('html'));
+    gulp.watch('app/src/**/*.sass', gulp.parallel('sass'));
+    gulp.watch('app/src/**/*.js', gulp.parallel('js'));
     gulp.watch('app/src/*.html', gulp.parallel('html'));
 });
 
