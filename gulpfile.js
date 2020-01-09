@@ -30,16 +30,19 @@ gulp.task('js', function () {
 gulp.task('html', function(){
     return gulp.src('app/src/*.html')
     .pipe(browserSync.reload({stream: true}))
-    .pipe(concat('main.html'))
     .pipe(gulp.dest('app/dist/'))
     .pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task('browser-sync', function() {
     browserSync.init({
-        server: 'app/',
+        server: {
+            baseDir: "app/dist/",
+            index: "index.html"
+        },
         port: 8080,
         open: false,
+        //baseDir: 'app/dist'
     });
 });
 
