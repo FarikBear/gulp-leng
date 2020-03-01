@@ -1,41 +1,61 @@
-const { src, dest } = require("gulp");
+const gulp = require("gulp");
 const sass = require("gulp-sass");
-const browserSync = require("browser-sync");
+const browserSync = require("browser-sync").create();
+const concat = require("gulp-concat");
+const uglify = require("gulp-uglify");
 const rename = require("gulp-rename");
+const autoprefixer = require("gulp-autoprefixer");
+const clear = require("del");
 
-function style() {
-  return gulp
-    .src("app/src/sass/**/*.sass")
-    .pipe(sass({ outputStyle: "compressed" }))
-    .pipe(rename({ suffix: ".min" }))
-    .pipe(gulp.dest("app/dest/css"))
-    .pipe(browserSync.reload({ stream: true }));
-}
-// gulp.task('sass', function() {
-//     return gulp.src('app/src/sass/**/*.sass')
-//         .pipe(sass({outputStyle: 'compressed'}))
-//         .pipe(rename({suffix: '.min'}))
-//         .pipe(gulp.dest('app/dest/css'))
-//         .pipe(browserSync.reload({stream: true}))
-// });
-
-gulp.task("html", function() {
-  return gulp.src("app/**/*.html").pipe(browserSync.reload({ stream: true }));
+gulp.task("clean", () => {
+  clear(["assets/dist"]);
 });
 
-gulp.task("browser-sync", function() {
+gulp.task("sass", () => {
+  return gulp
+    .src("./src/sass/*.sass")
+    .pipe(sass({ outputStyle: "compressed" }))
+    .pipe(
+      autoprefixer({
+        cascade: false
+      })
+    )
+    .pipe(concat("style.css"))
+    .pipe(rename({ suffix: ".min" }))
+    .pipe(gulp.dest("assets/dist/css"));
+});
+
+gulp.task("js", () => {
+  return gulp
+    .src("assets/src/js/**/*.js")
+    .pipe(uglify())
+    .pipe(concat("script.js"))
+    .pipe(rename({ suffix: ".min" }))
+    .pipe(gulp.dest("assets/dist/js"));
+});
+
+gulp.task("html", () => {
+  return gulp
+    .src("assets/src/pages/**/*.pug")
+    .pipe(gulp.dest("assets/dist/templates/"));
+});
+
+gulp.task("serve", () => {
   browserSync.init({
     server: {
-      baseDir: "app/"
-    }
+      baseDir: "assets/",
+      index: "index.pug"
+    },
+    port: 8080,
+    open: false
+    //baseDir: 'app/dist'
   });
 });
 
-gulp.task("watch", function() {
-  gulp.watch("app/src/sass/**/*.sass", gulp.parallel("sass"));
-  gulp.watch("app/*.html", gulp.parallel("html"));
+gulp.task("watch", () => {
+  gulp.watch("assets/src/**/*.sass", gulp.parallel("sass"));
+  gulp.watch("assets/src/**/*.js", gulp.parallel("js"));
+  gulp.watch("assets/src/**/*.pug", gulp.parallel("html"));
 });
 
-gulp.task("default", gulp.parallel("browser-sync", "watch"));
-
-exports.images = images;
+gulp.task("default", gulp.parallel("clean", "watch"));
