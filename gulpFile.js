@@ -47,7 +47,7 @@ gulp.task("serve", () => {
       index: "index.pug"
     },
     port: 8080,
-    open: false
+    open: true
     //baseDir: 'app/dist'
   });
 });
@@ -58,4 +58,4 @@ gulp.task("watch", () => {
   gulp.watch("assets/src/**/*.pug", gulp.parallel("html"));
 });
 
-gulp.task("default", gulp.parallel("clean", "watch"));
+gulp.task("default", gulp.parallel("clean", "watch", "serve"));
