@@ -9,17 +9,25 @@
     "gulp-sass": "^4.0.2"
   },
   "devDependencies": {
+    "browserslist": "^4.2.1",
     "@babel/preset-env": "^7.7.7",
     "browser-sync": "^2.26.7",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^7.0.1",
+    "gulp-clean-css": "^4.2.0",
     "gulp-concat": "^2.6.1",
-    "gulp-uglify": "^3.0.2"
+    "gulp-uglify": "^3.0.2",
+    "gulp-watch": "^5.0.0",
+    "gulp-imagemin": "^7.1.0",
   },
   "scripts": {
     "dev": "gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "browserslist": [
+    "> 1%",
+    "last 25 versions"
+  ],
   "author": "",
   "license": "ISC"
 }
